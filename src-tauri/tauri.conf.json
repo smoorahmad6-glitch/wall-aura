@@ -1,7 +1,7 @@
 {
-  "productName": "wall-aura",
+  "productName": "AuraFlow Wallpaper",
   "version": "0.2.0",
-  "identifier": "com.wall-aura.app",
+  "identifier": "com.ahmed.app",
   "build": {
     "beforeDevCommand": "npm run dev",
     "beforeBuildCommand": "npm run build",
