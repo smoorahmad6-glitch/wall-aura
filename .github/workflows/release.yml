@@ -10,33 +10,24 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Setup Rust
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: stable
-          components: clippy
+        uses: dtolnay/rust-toolchain@stable
+
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: '20'
+          cache: 'npm'
+
       - name: Install dependencies
-        run: |
-          cd src
-          npm ci
-      - name: Run frontend tests
-        run: |
-          cd src
-          npm run test -- --run
-      - name: Build frontend
-        run: |
-          cd src
-          npm run build
+        run: npm install
+
       - name: Build Tauri
-        run: |
-          npm ci
-          npm run tauri:build
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          name: release-bundle
-          path: src-tauri/target/release/bundle
+          tagName: ${{ github.ref_name }}
+          releaseName: "Wall Aura ${{ github.ref_name }}"
+          releaseBody: "Automated Build for Ahmed's Wall Aura"
