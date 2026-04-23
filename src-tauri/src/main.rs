@@ -12,7 +12,7 @@ use wall_aura_lib::{
     fullscreen_detection,
 };
 
-// تعريف الـ Static 
+// تعريف الـ Static لضمان أداء مستقر في الـ Vibe Coding
 static WALLPAPER_MANAGER: once_cell::sync::Lazy<Arc<WallpaperManager>> =
     once_cell::sync::Lazy::new(|| Arc::new(WallpaperManager::new()));
 
@@ -56,13 +56,17 @@ async fn get_fullscreen_state() -> Result<bool, String> {
 }
 
 fn main() {
+    // تفعيل الـ Logger لمراقبة الأخطاء أثناء التطوير
     env_logger::init();
 
     let manager = WALLPAPER_MANAGER.clone();
 
     tauri::Builder::default()
+        // --- تفعيل الـ Plugins الأساسية لـ Tauri v2 ---
         .plugin(tauri_plugin_shell::init()) 
-        .plugin(tauri_plugin_dialog::init()) // <--- هذا السطر هو مفتاح الحل لفتح الملفات
+        .plugin(tauri_plugin_dialog::init()) 
+        .plugin(tauri_plugin_fs::init()) // هذا هو السطر الذي كان ينقصك لقراءة الملفات
+        // -------------------------------------------
         .invoke_handler(tauri::generate_handler![
             init_wallpaper,
             get_monitors,
@@ -75,9 +79,12 @@ fn main() {
             let app_handle = app.app_handle().clone();
             let mgr = manager.clone();
 
+            // مهمة مراقبة الـ Fullscreen في الخلفية
             tauri::async_runtime::spawn(async move {
                 loop {
-                    sleep(Duration::from_millis(2000)).await;
+                    // إذا كان الجهاز يعلق، يمكنك زيادة الـ Duration إلى 2000ms
+                    sleep(Duration::from_millis(1000)).await;
+                    
                     unsafe {
                         let is_fullscreen = fullscreen_detection::check_foreground_window_fullscreen();
                         

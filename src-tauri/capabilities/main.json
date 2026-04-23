@@ -6,8 +6,8 @@
   "permissions": [
     "core:default",
     "dialog:default",
-    "fs:allow-read",
-    "protocol:asset",
-    "shell:allow-open"
+    "shell:default",
+    "shell:allow-open",
+    "fs:default" 
   ]
 }
