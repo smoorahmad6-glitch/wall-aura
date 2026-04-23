@@ -1,4 +1,4 @@
-use tauri::{Manager, Emitter}; // أضفنا Emitter هنا
+use tauri::{Manager, Emitter}; 
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::time::sleep;
@@ -12,7 +12,7 @@ use wall_aura_lib::{
     fullscreen_detection,
 };
 
-// تعريف الـ Static ليكون متوافق مع معايير الأمان الجديدة
+// تعريف الـ Static 
 static WALLPAPER_MANAGER: once_cell::sync::Lazy<Arc<WallpaperManager>> =
     once_cell::sync::Lazy::new(|| Arc::new(WallpaperManager::new()));
 
@@ -56,14 +56,13 @@ async fn get_fullscreen_state() -> Result<bool, String> {
 }
 
 fn main() {
-    // إزالة env_logger::init() إذا كنت تستخدم tauri-plugin-log مستقبلاً، 
-    // لكنها تعمل حالياً بشكل جيد للـ Debugging.
     env_logger::init();
 
     let manager = WALLPAPER_MANAGER.clone();
 
     tauri::Builder::default()
-        .plugin(tauri_plugin_shell::init()) // ضروري جداً في Tauri v2
+        .plugin(tauri_plugin_shell::init()) 
+        .plugin(tauri_plugin_dialog::init()) // <--- هذا السطر هو مفتاح الحل لفتح الملفات
         .invoke_handler(tauri::generate_handler![
             init_wallpaper,
             get_monitors,
@@ -76,14 +75,12 @@ fn main() {
             let app_handle = app.app_handle().clone();
             let mgr = manager.clone();
 
-            // Spawn fullscreen detection task
             tauri::async_runtime::spawn(async move {
                 loop {
-                    sleep(Duration::from_millis(500)).await;
+                    sleep(Duration::from_millis(2000)).await;
                     unsafe {
                         let is_fullscreen = fullscreen_detection::check_foreground_window_fullscreen();
                         
-                        // استخدام mgr.get_pause_state() و mgr.set_pause_state() للتعامل الآمن
                         if is_fullscreen && !mgr.get_pause_state() {
                             mgr.set_pause_state(true);
                             let _ = app_handle.emit("fullscreen_detected", true);
