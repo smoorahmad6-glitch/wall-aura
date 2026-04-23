@@ -1,3 +1,6 @@
 @import './App.css';
 
 /* Tailwind imports are handled by vite.config.ts */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
