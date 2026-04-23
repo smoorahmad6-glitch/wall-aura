@@ -35,7 +35,9 @@ pub enum ContentType {
 pub struct WallpaperManager {
     pub is_paused: Arc<Mutex<bool>>,
     pub is_fullscreen: Arc<Mutex<bool>>,
-    pub worker_w_handle: Arc<Mutex<Option<HWND>>>,
+    // HWND contains a raw pointer which is not Send/Sync. Store the raw pointer
+    // as an integer (isize) so the manager can be shared across threads.
+    pub worker_w_handle: Arc<Mutex<Option<isize>>>,
     pub configs: Arc<DashMap<usize, WallpaperConfig>>,
 }
 
