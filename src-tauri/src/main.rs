@@ -86,10 +86,10 @@ fn main() {
                         // استخدام mgr.get_pause_state() و mgr.set_pause_state() للتعامل الآمن
                         if is_fullscreen && !mgr.get_pause_state() {
                             mgr.set_pause_state(true);
-                            let _ = app_handle.emit_all("fullscreen_detected", false);
+                            let _ = app_handle.emit("fullscreen_detected", true);
                         } else if !is_fullscreen && mgr.get_pause_state() {
                             mgr.set_pause_state(false);
-                            let _ = app_handle.emit("fullscreen_detected", true);
+                            let _ = app_handle.emit("fullscreen_detected", false);
                         }
                     }
                 }
