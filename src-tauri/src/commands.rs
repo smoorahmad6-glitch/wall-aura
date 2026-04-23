@@ -1,5 +1,4 @@
 pub mod api {
-    use crate::WALLPAPER_MANAGER;
 
     #[tauri::command]
     pub async fn update_wallpaper_content(

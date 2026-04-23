@@ -1,6 +1,5 @@
 use serde::{Deserialize, Serialize};
 use std::sync::{Arc, Mutex};
-use windows::Win32::Foundation::HWND;
 use dashmap::DashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

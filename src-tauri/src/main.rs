@@ -89,7 +89,7 @@ fn main() {
                             let _ = app_handle.emit_all("fullscreen_detected", true);
                         } else if !is_fullscreen && mgr.get_pause_state() {
                             mgr.set_pause_state(false);
-                            let _ = app_handle.emit_all("fullscreen_detected", false);
+                            let _ = app_handle.emit("fullscreen_detected", true);
                         }
                     }
                 }
